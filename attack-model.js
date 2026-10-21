@@ -12,14 +12,14 @@
   const shoot=from=>({kind:'shot',from,target:[45,-3],release:.34,arrive:.74});
   function build(spec){
     const initialOwn=copy(spec.startingOwn||initial),initialOpp=copy(spec.startingOpposition||opposition);
-    let own=copy(initialOwn),opp=copy(initialOpp),owner=spec.initialOwner??1;
+    let own=copy(initialOwn),opp=copy(initialOpp),owner=spec.initialOwner===undefined?1:spec.initialOwner;
     const steps=spec.steps.map((s,index)=>{
       const start=copy(own),blueStart=copy(opp);own={...own,...s.move};opp={...opp,...s.blue};
-      const step={...s,index,duration:s.duration||6500,start,finish:copy(own),blueStart,blueFinish:copy(opp),ownerStart:owner};
+      const step={...s,duties:{...spec.roles,...s.duties},index,duration:s.duration||6500,start,finish:copy(own),blueStart,blueFinish:copy(opp),ownerStart:owner};
       owner=s.ball.kind==='pass'?s.ball.to:s.ball.kind==='carry'?s.ball.owner:null;
       step.ownerEnd=owner;return step;
     });
-    return{...spec,initial:initialOwn,opposition:initialOpp,initialOwner:spec.initialOwner??1,steps};
+    return{...spec,initial:initialOwn,opposition:initialOpp,initialOwner:spec.initialOwner===undefined?1:spec.initialOwner,steps};
   }
   const strategies=[build({
     id:'cutback',letter:'A',name:'左路下底 · 倒三角',short:'边路推进',condition:'适合左侧有接球和推进空间时。',summary:'门将 → 左后卫 → 6号 → 左边锋 → 8号射门',
@@ -225,26 +225,27 @@
     return c?[(1-u)*(1-u)*a[0]+2*(1-u)*u*c[0]+u*u*b[0],(1-u)*(1-u)*a[1]+2*(1-u)*u*c[1]+u*u*b[1]]:lerp(a,b,u);
   }
   const foot=p=>[p[0]+4.7,p[1]-1.7];
+  function tokenFoot(step,key,t){const blue=typeof key==='string'&&key.startsWith('b');return foot(pointAt(step,blue?key.slice(1):key,t,blue));}
   function ballAt(step,t){
-    const b=step.ball;if(b.kind==='carry')return foot(pointAt(step,b.owner,t));
-    if(t<=b.release)return foot(pointAt(step,b.from,t));
-    const a=foot(pointAt(step,b.from,b.release));
-    const target=b.kind==='shot'?b.target:foot(pointAt(step,b.to,b.arrive));
+    const b=step.ball;if(b.kind==='hold')return b.point.slice();if(b.kind==='carry')return tokenFoot(step,b.owner,t);
+    if(t<=b.release)return b.fromPoint?b.fromPoint.slice():tokenFoot(step,b.from,t);
+    const a=b.fromPoint||tokenFoot(step,b.from,b.release);
+    const target=b.toPoint|| (b.kind==='shot'?b.target:tokenFoot(step,b.to,b.arrive));
     if(t<b.arrive)return lerp(a,target,clamp((t-b.release)/(b.arrive-b.release)));
-    return b.kind==='shot'?target.slice():foot(pointAt(step,b.to,t));
+    return b.toPoint||b.kind==='shot'?target.slice():tokenFoot(step,b.to,t);
   }
   function sample(strategy,stepIndex,t){
     const s=strategy.steps[stepIndex];t=clamp(t);
     return{own:Object.fromEntries(ids.map(id=>[id,pointAt(s,id,t)])),opposition:Object.fromEntries(ids.map(id=>[id,pointAt(s,id,t,true)])),ball:ballAt(s,t)};
   }
-  function passRoute(step){const b=step.ball;return b.kind==='carry'?null:{from:foot(pointAt(step,b.from,b.release)),to:b.kind==='shot'?b.target:foot(pointAt(step,b.to,b.arrive)),shot:b.kind==='shot'};}
+  function passRoute(step){const b=step.ball;return ['carry','hold'].includes(b.kind)?null:{from:b.fromPoint||tokenFoot(step,b.from,b.release),to:b.toPoint||(b.kind==='shot'?b.target:tokenFoot(step,b.to,b.arrive)),shot:b.kind==='shot',high:!!b.high};}
   class Playback{
-    constructor(){this.setStrategy(0);}
-    get strategy(){return strategies[this.strategyIndex];}
+    constructor(catalogue=strategies){this.catalogue=catalogue;this.setStrategy(0);}
+    get strategy(){return this.catalogue[this.strategyIndex];}
     get current(){return this.strategy.steps[this.step];}
     get progress(){return this.elapsed/this.current.duration;}
     get finished(){return !this.running&&this.elapsed>=this.current.duration;}
-    setStrategy(i){if(!strategies[i])throw new RangeError('Unknown strategy');this.strategyIndex=i;this.reset();}
+    setStrategy(i){if(!this.catalogue[i])throw new RangeError('Unknown strategy');this.strategyIndex=i;this.reset();}
     reset(){this.step=0;this.elapsed=0;this.running=false;this.mode='step';this.started=false;}
     selectStep(i,play=false){if(!this.strategy.steps[i])return false;this.step=i;this.elapsed=0;this.mode='step';this.running=play;this.started=play;return true;}
     playAll(){this.reset();this.mode='all';this.running=true;this.started=true;}
@@ -262,5 +263,5 @@
     }
     snapshot(){return sample(this.strategy,this.step,this.progress);}
   }
-  return{ids,names,shortNames,strategies,pointAt,ballAt,sample,passRoute,Playback};
+  return{ids,names,shortNames,strategies,pointAt,ballAt,sample,passRoute,Playback,build,pass,carry,shoot};
 });

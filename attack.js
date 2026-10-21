@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const M=window.AttackModel, player=new M.Playback(), ns='http://www.w3.org/2000/svg';
+  const M=window.SetpiecesModel||window.AttackModel, player=new M.Playback(), ns='http://www.w3.org/2000/svg';
   const $=s=>document.querySelector(s), nodes={own:{},blue:{}};
   const field=$('#tactic-board'), football=$('#football');
   let previousTime=null, speed=1, lastStep='',lastState='',animationId=0;
@@ -21,7 +21,7 @@
       if(Math.hypot(b[0]-a[0],b[1]-a[1])>2)$('#run-routes').append(svg('path',{d:routePath(a,b,s.curves?.[id]),class:`run-route ${s.focus.includes(id)?'key-run':''}`}));
       nodes.own[id].classList.toggle('is-focus',s.focus.includes(id));
     }
-    const p=M.passRoute(s);if(p)$('#pass-routes').append(svg('path',{d:routePath(p.from,p.to),class:`pass-route ${p.shot?'shot':''}`}));
+    const p=M.passRoute(s);if(p)$('#pass-routes').append(svg('path',{d:routePath(p.from,p.to),class:`pass-route ${p.shot?'shot':''} ${p.high?'high-pass':''}`}));
     $('#run-routes').style.display=$('#show-runs').checked?'':'none';
   }
   function updateStep(){
@@ -38,6 +38,11 @@
     updateStep();const snapshot=player.snapshot();
     for(const id of M.ids){nodes.own[id].setAttribute('transform',`translate(${snapshot.own[id].join(' ')})`);nodes.blue[id].setAttribute('transform',`translate(${snapshot.opposition[id].join(' ')})`);}
     football.setAttribute('transform',`translate(${snapshot.ball.join(' ')})`);
+    const b=player.current.ball, flying=!!b.release&&player.progress>b.release&&player.progress<b.arrive;
+    const owner=b.kind==='carry'?b.owner:!flying&&player.progress>=b.arrive?b.to:!flying?b.from:null;
+    const status=$('#possession-status');
+    if(status)status.textContent=flying?(b.high?'高球飞行 · 看落点':b.toPoint?'球未受控 · 看第二点':'传球 / 射门中'):owner!=null?`${String(owner).startsWith('b')?'蓝方':'我方'} ${String(owner).replace(/^b/,'')}号持球`:b.kind==='hold'||b.fromPoint&&player.progress<=b.release?'准备重新开球':'球未受控 · 判断落点';
+    football.classList.toggle('high-flight',flying&&!!b.high);
     $('#scrubber').value=String(Math.round(player.progress*1000));$('#progress-value').textContent=`${Math.round(player.progress*100)}%`;
     $('#scrubber').setAttribute('aria-valuetext',`第${player.step+1}步，${Math.round(player.progress*100)}%`);
     $('#prev-step').disabled=player.step===0;$('#next-step').disabled=player.step===player.strategy.steps.length-1;
@@ -56,9 +61,12 @@
   function playSingle(index,scroll=false){stopFrame();player.selectStep(index,true);render();ensureFrame();if(scroll)prepareView();}
   function selectStrategy(i){
     stopFrame();player.setStrategy(i);lastStep='';lastState='';
-    document.querySelectorAll('[data-strategy]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.strategy)===i)));
+    document.querySelectorAll('[data-strategy]').forEach(b=>{b.setAttribute('aria-pressed',String(Number(b.dataset.strategy)===i));b.hidden=!!$('#lesson-groups')&&(M.strategies[Number(b.dataset.strategy)].group!==player.strategy.group);});
+    document.querySelectorAll('[data-group]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.group===player.strategy.group)));
+    const followups=$('#followup-links');
+    if(followups){followups.replaceChildren(...(player.strategy.followups||[]).map(id=>{const s=M.strategies.find(x=>x.id===id),a=document.createElement('a');a.href=`#${id}`;a.textContent=s.name;return a;}));$('#followup-panel').hidden=!followups.childElementCount;}
     $('#strategy-condition').textContent=player.strategy.condition;
-    $('#origin-text').textContent=`3-2-3 / ${player.strategy.startHint||'从门将出球开始'}`;
+    $('#origin-text').textContent=`${window.SetpiecesModel?'9人制':'3-2-3'} / ${player.strategy.startHint||'从门将出球开始'}`;
     $('#reset').textContent=player.strategy.resetLabel||'回到开球';
     $('#step-chips').classList.toggle('long-sequence',player.strategy.steps.length>8);
     $('#route-summary').textContent=player.strategy.summary;$('#principle').textContent=player.strategy.principle;
@@ -74,8 +82,9 @@
   $('#scrubber').addEventListener('input',()=>{stopFrame();player.seek(Number($('#scrubber').value)/1000);render();});
   $('#speed').addEventListener('change',()=>{speed=Number($('#speed').value);});
   $('#show-runs').addEventListener('change',()=>{$('#run-routes').style.display=$('#show-runs').checked?'':'none';});
-  document.querySelectorAll('[data-strategy]').forEach(b=>b.addEventListener('click',()=>{const index=Number(b.dataset.strategy);history.replaceState(null,'',`#${M.strategies[index].id}`);selectStrategy(index);}));
-  window.addEventListener('hashchange',()=>{selectStrategy(Math.max(0,M.strategies.findIndex(s=>`#${s.id}`===location.hash)));});
+  const tabs=$('.strategy-tabs');tabs.replaceChildren(...M.strategies.map((s,i)=>{const b=document.createElement('button'),letter=document.createElement('span'),body=document.createElement('span'),title=document.createElement('b'),small=document.createElement('small');b.type='button';b.dataset.strategy=String(i);b.setAttribute('aria-pressed','false');letter.className='letter';letter.textContent=s.letter;title.textContent=s.group==='press'?s.name.split(' · ').slice(-1)[0]:s.name.split(' · ')[0];small.textContent=s.short;body.append(title,small);b.append(letter,body);b.addEventListener('click',()=>{history.replaceState(null,'',`#${s.id}`);selectStrategy(i);});return b;}));
+  document.querySelectorAll('[data-group]').forEach(b=>b.addEventListener('click',()=>{const i=M.strategies.findIndex(s=>s.group===b.dataset.group);history.replaceState(null,'',`#${M.strategies[i].id}`);selectStrategy(i);}));
+  window.addEventListener('hashchange',()=>{selectStrategy(Math.max(0,M.strategies.findIndex(s=>`#${s.id}`===location.hash)));prepareView();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden){player.pause();stopFrame();render();}});
   document.addEventListener('keydown',e=>{if(e.target.closest('input,select,button,a,summary'))return;if(e.key===' '){e.preventDefault();if(player.running){player.pause();stopFrame();}else if(player.started&&!player.finished)player.resume();else player.playStep();render();ensureFrame();}else if(e.key==='ArrowRight'&&player.step<player.strategy.steps.length-1)playSingle(player.step+1);else if(e.key==='ArrowLeft'&&player.step>0)playSingle(player.step-1);});
   addPlayers();selectStrategy(Math.max(0,M.strategies.findIndex(s=>`#${s.id}`===location.hash)));

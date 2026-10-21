@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#37003c">
+<meta name="description" content="泛美FC9人制定位球课：角球、任意球、界外球与防对方快开，六段原生网页动画展示全队分工和第二点。">
+<title>定位球与重新开球｜泛美FC战术手册·第五课</title>
+<link rel="stylesheet" href="attack.css?v=20261021-2">
+<script defer src="attack-model.js?v=20261021-2"></script>
+<script defer src="setpieces-model.js?v=20261021-2"></script>
+<script defer src="attack.js?v=20261021-2"></script>
+</head>
+<body>
+<a class="skip" href="#player">跳到动画课堂</a>
+<div class="page">
+  <header class="topbar wrap"><a href="index.html" class="back-link">← 基础阵型</a><span>第五课 · 定位球</span></header>
+  <main>
+    <section class="hero"><div class="wrap"><p class="eyebrow" id="origin-text">9人制 / 无越位 / 定位球</p><h1>球停下来，<br><span>分工先到位。</span></h1><p>角球、任意球、界外球。开球前知道任务，开球后继续做下一件事。</p></div></section>
+    <section class="wrap restart-intro" aria-labelledby="restart-title"><h2 id="restart-title">先把一套分工练熟</h2><p>每段都有<strong>九名我方球员和九名对方球员</strong>。先看门前谁争球，再看谁管外围、谁留防反击。点击下方“九个人各做什么”查看具体任务。</p><ol><li><strong>防守先确认：</strong>门前保护、跟人、短传接应和外围第二点分别由谁负责。</li><li><strong>进攻先留保护：</strong>对方留前人数增加，留后的人也要跟着调整，不能少防多。</li><li><strong>球开出后不停：</strong>第一点之后继续看第二点；失去球权就延缓与回收。</li></ol><p class="rule-note">本页按本队“无越位”条件编排，不造越位。界外球开法、人墙与开球距离、门将回传限制、快开条件以本场赛事规则和裁判要求为准；图中距离为示意。</p></section>
+    <section class="wrap strategy-section" aria-labelledby="strategy-title">
+      <h2 id="strategy-title" class="small-heading">选一个定位球场景</h2>
+      <div class="strategy-tabs" aria-label="选择定位球场景"></div>
+      <p id="strategy-condition" class="condition"></p>
+    </section>
+
+    <section class="wrap classroom" id="player" aria-label="定位球与重新开球动画播放器">
+      <div class="step-copy">
+        <div class="step-meta"><span id="step-count">STEP 01 / 07</span><span id="play-status" aria-live="polite">准备播放</span></div>
+        <h2 id="step-title"></h2>
+        <p id="step-text"></p>
+      </div>
+      <div class="field-shell">
+        <div class="pitch-direction"><span>↑ 对方球门 · 我方向上进攻</span><span>无越位</span></div>
+        <p id="possession-status" class="possession-status" aria-live="off"></p>
+        <svg id="tactic-board" viewBox="-4 -7 108 153" role="img" aria-labelledby="board-title" aria-describedby="step-title step-text">
+          <title id="board-title">定位球动画，我方白色、对方蓝色，双方各九人</title>
+          <defs>
+            <pattern id="attack-grass" width="100" height="28" patternUnits="userSpaceOnUse"><rect width="100" height="28" fill="#471153"/><rect width="100" height="14" fill="#4e185b"/></pattern>
+            <marker id="pass-arrow" markerWidth="4.3" markerHeight="4.3" viewBox="0 0 5 5" refX="4.2" refY="2.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L5 2.5 0 5Z" fill="#ff61a4"/></marker>
+            <marker id="run-arrow" markerWidth="3.6" markerHeight="3.6" viewBox="0 0 5 5" refX="4.2" refY="2.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L5 2.5 0 5Z" fill="#00ff87"/></marker>
+          </defs>
+          <rect x="0" y="0" width="100" height="140" fill="url(#attack-grass)"/>
+          <g class="pitch-lines" fill="none" stroke="#d9bfe5" stroke-width=".4" opacity=".8"><rect x=".5" y=".5" width="99" height="139"/><path d="M.5 70h99 M22 .5v26h56V.5 M38 .5v10h24V.5 M22 139.5v-26h56v26 M38 139.5v-10h24v10 M40 0v-5h20v5 M40 140v5h20v-5"/><circle cx="50" cy="70" r="11.5"/></g>
+          <g fill="#d9bfe5"><circle cx="50" cy="70" r=".6"/><circle cx="50" cy="18" r=".6"/><circle cx="50" cy="122" r=".6"/></g>
+          <g id="run-routes" aria-hidden="true"></g><g id="pass-routes" aria-hidden="true"></g>
+          <g id="opponents"></g><g id="our-players"></g>
+          <g id="football" aria-label="足球"><circle r="1.9" fill="#ffe377"/><circle r="1.43" fill="#fff" stroke="#30113c" stroke-width=".18"/><path d="M0-.76 .72-.23 .45.65H-.45L-.72-.23Z" fill="#30113c"/></g>
+        </svg>
+        <div class="legend" aria-label="图例"><span><i class="own-dot"></i>我方</span><span><i class="opp-dot"></i>对方</span><span><i class="pass-line"></i>传球 / 射门</span><span><i class="high-line"></i>高球</span><span><i class="run-line"></i>跑位</span></div>
+      </div>
+      <div class="controls">
+        <div id="step-chips" class="step-chips" aria-label="点击步骤编号，播放该步骤"></div>
+        <label class="scrubber-label"><span>本步进度</span><input id="scrubber" type="range" min="0" max="1000" value="0" aria-label="拖动查看本步进度"><output id="progress-value">0%</output></label>
+        <div class="play-buttons"><button type="button" id="play-all" class="primary">▶ 完整播放</button><button type="button" id="play-step">▷ 播放本步</button><button type="button" id="pause" disabled>暂停</button></div>
+        <div class="step-nav"><button type="button" id="prev-step">← 上一步</button><button type="button" id="reset">回到场景起点</button><button type="button" id="next-step">下一步 →</button></div>
+        <div class="player-options"><label><input id="show-runs" type="checkbox" checked>显示跑位线</label><label>速度 <select id="speed" aria-label="播放速度"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label></div>
+      </div>
+    </section>
+
+    <section class="wrap support-section">
+      <div class="guard"><span class="guard-label">分工与下一拍</span><p id="guard-text"></p></div>
+      <aside id="followup-panel" class="followup-panel" hidden><h3>遇到这些情况，接着看</h3><p>点击进入对应情景，从该分支的起点重新演示。</p><div id="followup-links"></div></aside>
+      <p class="how-to">点“完整播放”从本策略起点看完；点步骤编号或“下一步”，只播放所选的一步。暂停后可以拖动进度条细看。</p>
+      <details class="duties" id="duties"><summary><span>这一步，九个人各做什么？</span><b aria-hidden="true">＋</b></summary><ol id="duty-list"></ol></details>
+      <details class="all-steps"><summary><span>整套路线与步骤</span><b aria-hidden="true">＋</b></summary><p id="route-summary"></p><p id="principle"></p><ol id="step-list"></ol></details>
+      <aside class="remember"><span>球开出后，继续踢下一拍</span><p>门前有人，外围有人，身后有人保护。<br>看清第二点，确认球权再前移。</p><small>这六段是本队训练起点。可按身高、速度、到场人员和对手部署调整号码分工；门将与队长统一提醒。</small></aside>
+    </section>
+  </main>
+  <footer class="wrap footer"><a href="attack.html" class="next-lesson">第二课 · 基本进攻与高压出球 →</a><a href="defense.html">第三课 · 基本防守 →</a><a href="roles.html">第四课 · 位置行为卡 →</a><a href="index.html">← 返回战术手册首页</a><a href="references.html">战术参考来源说明 →</a><p>泛美FC战术手册 · 第五课 / 定位球与重新开球</p></footer>
+</div>
+<noscript><p style="padding:20px">请开启 JavaScript 观看六段网页动画：防守角球、进攻角球、防守任意球、进攻任意球、后场界外球、防对方快开。先固定分工，争第一点后继续争第二点，失球权就回收。</p></noscript>
+</body>
+</html>
