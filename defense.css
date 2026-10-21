@@ -1,0 +1,24 @@
+.defense-overview{padding:23px 16px 17px;margin-top:16px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--green);border-radius:11px}
+.overline{font-size:10px;color:#765e7a;font-weight:800;letter-spacing:.07em}
+.defense-overview h2{display:flex;align-items:center;gap:7px;font-size:19px;line-height:1.4;letter-spacing:-.04em;margin:5px 0 8px;white-space:nowrap}
+.defense-overview h2 span:last-child{color:#ac1365}.defense-overview h2 b{color:#80598d;font-size:16px}
+.overview-lead{font-size:13px;line-height:1.75;color:#5c5062}
+.overview-points{margin-top:15px;border-top:1px solid var(--line)}
+.overview-point{display:grid;grid-template-columns:26px 1fr;gap:9px;padding:13px 0;border-bottom:1px solid var(--line)}
+.overview-point:last-child{border-bottom:0;padding-bottom:3px}
+.point-no{width:24px;height:24px;display:grid;place-items:center;background:var(--purple);color:#fff;font:750 10px Arial,sans-serif;margin-top:2px;border-radius:4px}
+.overview-point h3{font-size:14px;line-height:1.45;font-weight:800;margin:0 0 4px}
+.overview-point p{font-size:12px;line-height:1.8;color:#66576e;margin:0}
+.priority-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:#e8e1ed;border-radius:7px;overflow:hidden;margin-top:15px}
+.priority-strip span{background:#f4f0f6;padding:9px 5px;text-align:center;font-size:10px;line-height:1.6;color:#6d5b74}
+.priority-strip strong{display:block;font-size:11px;color:#37003c}
+.defense-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.defense-tabs button{min-height:66px;padding:9px 8px;gap:8px}
+.defense-tabs button:last-child{grid-column:span 2}
+.defense-tabs .letter{width:23px;height:23px;font-size:12px}
+.defense-tabs b{font-size:13px;white-space:nowrap}.defense-tabs small{font-size:10px;line-height:1.4;margin-top:1px}
+.pass-route.high-pass{stroke-dasharray:2 1.3}
+.defense-footer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2px 15px}
+.defense-footer p{width:100%}
+@media(min-width:760px){.defense-overview{padding:25px 23px 22px}.defense-overview h2{font-size:25px}.overview-lead{font-size:14px}.overview-point{grid-template-columns:30px 1fr;gap:12px;padding:16px 0}.overview-point h3{font-size:16px}.overview-point p{font-size:14px}.priority-strip strong{font-size:13px}.priority-strip span{font-size:11px;padding:12px 6px}.defense-tabs{gap:10px}.defense-tabs button{padding:12px;min-height:76px}.defense-tabs b{font-size:15px}.defense-tabs small{font-size:11px}}
+@media(max-width:350px){.defense-overview{padding:17px 11px}.defense-overview h2{font-size:16px}.defense-tabs{gap:4px}.defense-tabs button{padding:8px 5px}.defense-tabs b{font-size:11px}.defense-tabs small{font-size:8px}.priority-strip strong{font-size:10px}.priority-strip span{font-size:9px}}

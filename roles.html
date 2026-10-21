@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#37003c">
+<meta name="description" content="9人制3-2-3全队九个位置行为卡。每个位置分别演示进攻、防守时的错误与正确跑位，手机上逐步播放。">
+<title>全队九个位置行为卡｜9人制3-2-3战术</title>
+<link rel="stylesheet" href="role-2.css">
+<link rel="stylesheet" href="roles.css">
+<script defer src="role-model.js"></script><script defer src="roles-model.js"></script><script defer src="roles.js"></script>
+</head>
+<body>
+<a class="skip" href="#lesson">跳到动画</a>
+<div class="page">
+  <header class="topbar"><div class="wrap bar-inner"><a href="index.html">← 基本站位</a><span>第四课 · 位置行为卡</span></div></header>
+  <main>
+    <section class="hero"><div class="wrap"><p class="eyebrow">9人制 / 3-2-3 / 全员行为卡</p><h1><span id="role-number">2号</span><span id="role-name">左后卫</span></h1><p class="hero-lead" id="role-lead">进攻给11号留退路；防守守住11号身后的内线。</p><p class="hero-small">每个位置都有攻防两种场景。看同一开局的❌错误与✅正确处理。</p></div></section>
+    <section class="wrap role-picker" aria-labelledby="pick-title"><div class="section-heading"><span>01 / 选位置</span><h2 id="pick-title">你踢哪个位置？</h2></div><div id="role-buttons" class="role-buttons" role="group" aria-label="九个位置"></div></section>
+    <section class="wrap lesson" id="lesson" aria-label="位置战术动画">
+      <div class="section-heading"><span>02 / 选场景</span><h2>这一拍怎么处理？</h2></div>
+      <div class="scene-tabs" role="group" aria-label="选择场景"><button type="button" data-scene="0" aria-pressed="true"><b id="defense-name">防守左路</b><small>防守时该做什么</small></button><button type="button" data-scene="1" aria-pressed="false"><b id="attack-name">左路进攻</b><small>进攻时该做什么</small></button></div>
+      <p class="condition" id="condition"></p>
+      <div class="explainer" aria-live="polite"><div class="step-kicker"><span id="verdict" class="verdict">❌ 错误处理</span><span id="step-index">第 1 / 2 步</span></div><h2 id="step-title"></h2><p id="step-text"></p></div>
+      <div class="board"><div class="board-top"><strong id="board-role">2号左后卫 · 场上视角</strong><span>↑ 向对方球门进攻</span></div>
+        <svg id="pitch" viewBox="-4 -7 108 153" role="img" aria-labelledby="board-title" aria-describedby="step-title step-text"><title id="board-title">位置跑位动画，我方白色，对手蓝色</title>
+          <defs><pattern id="grass" width="100" height="28" patternUnits="userSpaceOnUse"><rect width="100" height="28" fill="#43104f"/><rect width="100" height="14" fill="#4a1657"/></pattern><marker id="run-arrow" markerWidth="4" markerHeight="4" viewBox="0 0 5 5" refX="4.3" refY="2.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 5 2.5 0 5Z" fill="#00ff87"/></marker><marker id="bad-arrow" markerWidth="4" markerHeight="4" viewBox="0 0 5 5" refX="4.3" refY="2.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 5 2.5 0 5Z" fill="#ff7899"/></marker><marker id="ball-arrow" markerWidth="4" markerHeight="4" viewBox="0 0 5 5" refX="4.3" refY="2.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 5 2.5 0 5Z" fill="#ffe15f"/></marker></defs>
+          <rect width="100" height="140" fill="url(#grass)"/><g fill="none" stroke="#d9bfe5" stroke-width=".4" opacity=".75"><rect x=".5" y=".5" width="99" height="139"/><path d="M.5 70h99 M22 .5v26h56V.5 M38 .5v10h24V.5 M22 139.5v-26h56v26 M38 139.5v-10h24v10 M40 0v-5h20v5 M40 140v5h20v-5"/><circle cx="50" cy="70" r="11.5"/></g><circle cx="50" cy="70" r=".65" fill="#d9bfe5"/>
+          <g id="routes" aria-hidden="true"></g><g id="opponents"></g><g id="own-players"></g><g id="ball" aria-label="足球"><circle r="2.35" fill="#ffe15f"/><circle r="1.65" fill="#fff" stroke="#30113c" stroke-width=".25"/><path d="M0-.8 .75-.24 .46.68H-.46L-.75-.24Z" fill="#30113c"/></g>
+        </svg>
+        <div class="legend"><span><i class="our-dot"></i>我方</span><span><i class="their-dot"></i>对手</span><span><i class="focus-dot"></i><span id="legend-role">重点看2号</span></span><span><i class="path-line"></i>跑位/传球</span></div>
+      </div>
+      <div class="player-controls"><div class="main-controls"><button type="button" id="compare" class="primary">▶ 错误 → 正确，连续看</button><button type="button" id="pause" disabled>暂停</button></div><div class="alternative"><button type="button" id="wrong">❌ 只看错误</button><button type="button" id="right">✅ 只看正确</button></div><div class="step-controls"><span>分步看</span><div id="step-buttons" class="step-buttons"></div><button type="button" id="reset">↺ 回到起点</button></div><label class="scrub"><span>本步进度</span><input id="progress" type="range" min="0" max="1000" value="0" aria-label="本步进度"><output id="progress-label">0%</output></label><p class="play-status" id="play-status" aria-live="polite">准备播放</p></div>
+    </section>
+    <section class="wrap bottom"><div class="rule"><p class="rule-label" id="role-rule">2号的场上提醒</p><p><b>应该做：</b><span id="do-text"></span></p><p><b>尽量避免：</b><span id="dont-text"></span></p></div><p class="nuance" id="scene-tip"></p><p class="nuance">示意中的对手移动是教学场面。实际比赛先看球、看人、看空当；无越位时记得提醒队友照看身后。</p></section>
+  </main>
+  <footer class="wrap footer"><a href="defense.html">← 第三课 · 基本防守</a><a href="index.html">第一课 · 阵型站位</a><p>全队九个位置 · 攻防行为卡</p></footer>
+</div>
+<noscript><p class="noscript">请开启 JavaScript 观看九个位置的网页动画。</p></noscript>
+</body>
+</html>

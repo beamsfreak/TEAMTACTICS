@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#37003c">
+<meta name="description" content="9人制3-2-3六套进攻：下底倒三角、中锋回做、边锋内切、边路二过一、受阻换边和断球快反。原生网页动画支持完整与逐步播放。">
+<title>基本进攻策略与路线｜球队战术·第二课</title>
+<link rel="stylesheet" href="attack.css">
+<script defer src="attack-model.js"></script>
+<script defer src="attack.js"></script>
+</head>
+<body>
+<a class="skip" href="#player">跳到动画课堂</a>
+<div class="page">
+  <header class="topbar wrap"><a href="index.html" class="back-link">← 基础阵型</a><span>第二课 · 进攻配合</span></header>
+  <main>
+    <section class="hero"><div class="wrap"><p class="eyebrow" id="origin-text">3-2-3 / 从门将出球开始</p><h1>球向前，<br><span>人一起动。</span></h1><p>六套进攻选择。看传球，也看没拿球的人。</p></div></section>
+    <section class="wrap strategy-section" aria-labelledby="strategy-title">
+      <h2 id="strategy-title" class="small-heading">先选一套进攻</h2>
+      <div class="strategy-tabs" aria-label="选择进攻策略">
+        <button type="button" data-strategy="0" aria-pressed="true"><span class="letter">A</span><span><b>左路下底</b><small>倒三角找后插上</small></span></button>
+        <button type="button" data-strategy="1" aria-pressed="false"><span class="letter">B</span><span><b>中锋回做</b><small>中场迎球射门</small></span></button>
+        <button type="button" data-strategy="2" aria-pressed="false"><span class="letter">C</span><span><b>边锋内切</b><small>让出通道再打门</small></span></button>
+        <button type="button" data-strategy="3" aria-pressed="false"><span class="letter">D</span><span><b>边路二过一</b><small>低平球找后点</small></span></button>
+        <button type="button" data-strategy="4" aria-pressed="false"><span class="letter">E</span><span><b>受阻后换边</b><small>先回做，再找另一侧</small></span></button>
+        <button type="button" data-strategy="5" aria-pressed="false"><span class="letter">F</span><span><b>断球快反</b><small>抬头、分边、快跟进</small></span></button>
+      </div>
+      <p id="strategy-condition" class="condition"></p>
+    </section>
+
+    <section class="wrap classroom" id="player" aria-label="进攻配合动画播放器">
+      <div class="step-copy">
+        <div class="step-meta"><span id="step-count">STEP 01 / 07</span><span id="play-status" aria-live="polite">准备播放</span></div>
+        <h2 id="step-title"></h2>
+        <p id="step-text"></p>
+      </div>
+      <div class="field-shell">
+        <div class="pitch-direction"><span>↑ 对方球门 · 我方向上进攻</span><span>无越位</span></div>
+        <svg id="tactic-board" viewBox="-4 -7 108 153" role="img" aria-labelledby="board-title" aria-describedby="step-title step-text">
+          <title id="board-title">3-2-3进攻动画，九名我方球员与九名对方球员</title>
+          <defs>
+            <pattern id="attack-grass" width="100" height="28" patternUnits="userSpaceOnUse"><rect width="100" height="28" fill="#471153"/><rect width="100" height="14" fill="#4e185b"/></pattern>
+            <marker id="pass-arrow" markerWidth="4.3" markerHeight="4.3" viewBox="0 0 5 5" refX="4.2" refY="2.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L5 2.5 0 5Z" fill="#ff61a4"/></marker>
+            <marker id="run-arrow" markerWidth="3.6" markerHeight="3.6" viewBox="0 0 5 5" refX="4.2" refY="2.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0L5 2.5 0 5Z" fill="#00ff87"/></marker>
+          </defs>
+          <rect x="0" y="0" width="100" height="140" fill="url(#attack-grass)"/>
+          <g class="pitch-lines" fill="none" stroke="#d9bfe5" stroke-width=".4" opacity=".8"><rect x=".5" y=".5" width="99" height="139"/><path d="M.5 70h99 M22 .5v26h56V.5 M38 .5v10h24V.5 M22 139.5v-26h56v26 M38 139.5v-10h24v10 M40 0v-5h20v5 M40 140v5h20v-5"/><circle cx="50" cy="70" r="11.5"/></g>
+          <g fill="#d9bfe5"><circle cx="50" cy="70" r=".6"/><circle cx="50" cy="18" r=".6"/><circle cx="50" cy="122" r=".6"/></g>
+          <g id="run-routes" aria-hidden="true"></g><g id="pass-routes" aria-hidden="true"></g>
+          <g id="opponents"></g><g id="our-players"></g>
+          <g id="football" aria-label="足球"><circle r="1.9" fill="#ffe377"/><circle r="1.43" fill="#fff" stroke="#30113c" stroke-width=".18"/><path d="M0-.76 .72-.23 .45.65H-.45L-.72-.23Z" fill="#30113c"/></g>
+        </svg>
+        <div class="legend" aria-label="图例"><span><i class="own-dot"></i>我方</span><span><i class="opp-dot"></i>对方</span><span><i class="pass-line"></i>传球 / 射门</span><span><i class="run-line"></i>跑位</span></div>
+      </div>
+      <div class="controls">
+        <div id="step-chips" class="step-chips" aria-label="点击步骤编号，播放该步骤"></div>
+        <label class="scrubber-label"><span>本步进度</span><input id="scrubber" type="range" min="0" max="1000" value="0" aria-label="拖动查看本步进度"><output id="progress-value">0%</output></label>
+        <div class="play-buttons"><button type="button" id="play-all" class="primary">▶ 完整播放</button><button type="button" id="play-step">▷ 播放本步</button><button type="button" id="pause" disabled>暂停</button></div>
+        <div class="step-nav"><button type="button" id="prev-step">← 上一步</button><button type="button" id="reset">回到开球</button><button type="button" id="next-step">下一步 →</button></div>
+        <div class="player-options"><label><input id="show-runs" type="checkbox" checked>显示跑位线</label><label>速度 <select id="speed" aria-label="播放速度"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label></div>
+      </div>
+    </section>
+
+    <section class="wrap support-section">
+      <div class="guard"><span class="guard-label">球后与下一拍</span><p id="guard-text"></p></div>
+      <p class="how-to">点“完整播放”从本策略起点看完；点步骤编号或“下一步”，只播放所选的一步。暂停后可以拖动进度条细看。</p>
+      <details class="duties" id="duties"><summary><span>这一步，九个人各做什么？</span><b aria-hidden="true">＋</b></summary><ol id="duty-list"></ol></details>
+      <details class="all-steps"><summary><span>整套路线与步骤</span><b aria-hidden="true">＋</b></summary><p id="route-summary"></p><p id="principle"></p><ol id="step-list"></ol></details>
+      <aside class="remember"><span>场上先观察，再选路线</span><p>传球线被堵，就回做或换边。<br>8号前插时，6号与后卫先保住身后。</p><small>对手移动、距离和节奏为教学示意。无越位，球后的队员仍要照看对方留前的人。</small></aside>
+    </section>
+  </main>
+  <footer class="wrap footer"><a href="defense.html" class="next-lesson">第三课 · 防守站位与策略 →</a><a href="roles.html">第四课 · 全队位置行为卡 →</a><a href="index.html">← 返回第一课：基础阵型</a><p>球队战术 · 第二课 / 基本进攻</p></footer>
+</div>
+<noscript><p style="padding:20px">请开启 JavaScript 观看原生网页动画。A：门将→左后卫→6号→11号下底→8号倒三角射门。B：门将→中后卫→6号→8号→9号回做→8号射门。C：门将→左后卫→6号→11号推进内切→射门。D：门将→中后卫→6号→8号→7号与8号二过一→11号后点射门。E：门将组织左路→受阻回做→6号与后卫转到右路→后点射门。F：6号刚断球→快速分边→边锋推进→9号接应射门。</p></noscript>
+</body>
+</html>
